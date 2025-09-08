@@ -9,7 +9,9 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({ origin: ["https://psi-chat-bot-main.vercel.app/"], credentials: true })
+);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI);
@@ -22,6 +24,8 @@ You may rephrase the text for better readability, but DO NOT add, remove, or inv
 
 Do NOT use bold (**), italics (*), or Markdown formatting. 
 And also list products one each line starting with a bullet point (•).
+   
+
 
 Company Info:
 - Prime Sales Incorporated (PSI), founded in 1976, is a leading supplier of intralogistics solutions in the Philippines, specializing in dry and cold chain applications.
