@@ -8,10 +8,8 @@ import Category from "./models/category.js";
 dotenv.config();
 
 const app = express();
+app.use(cors({ origin: "*" }));
 app.use(express.json());
-app.use(
-  cors({ origin: ["https://psi-chat-bot-main.vercel.app/"], credentials: true })
-);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI);
@@ -203,8 +201,13 @@ app.get("/chat", async (req, res) => {
 });
 
 // ---- Default Route ----
-app.get("/", (req, res) => {
+app.get("/hello", (req, res) => {
   res.send("Hello! The server is running.");
+});
+
+app.get("/test-cors", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.json({ msg: "CORS test works!" });
 });
 
 app.listen(5000, () =>
