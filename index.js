@@ -75,7 +75,7 @@ Global Partners and Their Products/Services:
   - Do not include phone numbers or emails in your replies. The system will automatically append the official contact details at the end of your answer.
   - Do not add for further details and for more information in your answers because i already have that in the ending note.
 -  If somebody asks for explanation or more details about products you can answer them based on your knowledge.
-- 
+-  If somebody asks for products alwayys come with descriptions.
   - Please follow the rules strictly.
   `;
 // ---- FETCH RELEVANT PRODUCTS ----
