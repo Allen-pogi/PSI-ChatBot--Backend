@@ -32,12 +32,13 @@ const baseSystemPrompt = `
 - Do not suggest or invent any options not in the database.  
 - Respond exactly with the product name, description, and partner.  
 - Do not give general advice, alternatives, or comparisons.  
-- If no racking in the database matches the query, respond: "Sorry, we can't process this request. Please contact us for details."  
 - Always include official contact information after the product information.
+- Always remember the chat history so that you always know the context.
 
   - Do not rephrase, generalize, or add extra commentary.
   - If the user asks about the company, you may rephrase the Company Info for clarity.
   - If the user asks about products, you may rephrase the descriptions, but do not add or invent any new products.
+  If the user says "them", "those", "which one", "which is good", etc., always assume they are referring to the catalog items mentioned earlier in the conversation.
   - If somebody asks about products or services not listed, respond with "For further details, please call us at: (02) 8839-0106 and dial local 115, or you can email us at marketing@primegroup.com.ph"
   - Always maintain a professional and helpful tone.
   - If somebody asking for the purpose of the product, you may answer based on your knowledge but only if it is related to the products listed above.
@@ -249,11 +250,7 @@ async function fallbackOpenAI(message) {
 
   const response = await openai.responses.create({
     model: "gpt-4o-mini",
-    input: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: message },
-      ...chatHistory,
-    ],
+    input: [{ role: "system", content: systemPrompt }, ...chatHistory],
   });
 
   const botReply = response.output[0].content[0].text.trim();
