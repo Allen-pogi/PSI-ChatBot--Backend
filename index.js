@@ -243,11 +243,7 @@ async function fallbackOpenAI(message) {
 
   const response = await openai.responses.create({
     model: "gpt-4o-mini",
-    input: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: message },
-      ...chatHistory,
-    ],
+    input: [{ role: "system", content: systemPrompt }, ...chatHistory],
   });
 
   const botReply = response.output[0].content[0].text.trim();
