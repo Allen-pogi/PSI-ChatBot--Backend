@@ -32,7 +32,7 @@ const baseSystemPrompt = `
 - Do not suggest or invent any options not in the database.  
 - Respond exactly with the product name, description, and partner.  
 - Do not give general advice, alternatives, or comparisons.  
-- If no racking in the database matches the query, respond: "Sorry, we do not have a racking system for this specification. Please contact us for details."  
+- If no racking in the database matches the query, respond: "Sorry, we can't process this request. Please contact us for details."  
 - Always include official contact information after the product information.
 
   - Do not rephrase, generalize, or add extra commentary.
