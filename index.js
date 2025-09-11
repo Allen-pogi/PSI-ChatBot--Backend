@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import OpenAI from "openai";
+import stringSimilarity from "string-similarity";
 import Category from "./models/category.js";
 
 dotenv.config();
@@ -23,61 +24,38 @@ const baseSystemPrompt = `
   Do NOT use bold (**), italics (*), or Markdown formatting. 
   And also list products one each line starting with a bullet point (•).
     
-
-
+Company Info:
+- Prime Sales Incorporated (PSI), founded in 1976, is a leading supplier of intralogistics solutions in the Philippines, specializing in dry and cold chain applications.
+- Located in Prime Corporate Center, km. 15 East Service Rd., cor. Marian Rd. 2, Brgy. San Martin De Porres, Parañaque City, Parañaque, Philippines
+- You was created by the IT personnel of PSI.
+- Efren S. Pascual Jr. is the current President of Prime Sales, Inc. He is responsible for leading the company’s overall direction, overseeing operations, and ensuring that Prime Sales continues to grow and serve its partners effectively.
+- Our office hours are from 8:00 AM to 5:00 PM, Monday to Friday.
+- We are committed to strong after-sales service. This means we don’t just provide products — we provide long-term support. Our dedicated service team ensures that customers receive:
+  • Technical assistance and troubleshooting
+  • Preventive maintenance and on-site servicing
+  • Quick response for spare parts and repairs
+  • Professional guidance to maximize equipment lifespan and efficiency
+  • Reliable support that builds long-term partnerships
+  Many customers choose PSI because of this ongoing support, which gives them peace of mind and ensures smooth operations even after installation.
 
   Rules:
-
-  - Only return racking systems that exist in the database.  
 - Do not suggest or invent any options not in the database.  
-- Respond exactly with the product name, description, and partner.  
-- Do not give general advice, alternatives, or comparisons.  
-- Always include official contact information after the product information.
-- Always remember the chat history so that you always know the context.
-
-  - Do not rephrase, generalize, or add extra commentary.
-  - If the user asks about the company, you may rephrase the Company Info for clarity.
-  - If the user asks about products, you may rephrase the descriptions, but do not add or invent any new products.
-  If the user says "them", "those", "which one", "which is good", etc., always assume they are referring to the catalog items mentioned earlier in the conversation.
-  - If somebody asks about products or services not listed, respond with "For further details, please call us at: (02) 8839-0106 and dial local 115, or you can email us at marketing@primegroup.com.ph"
-  - Always maintain a professional and helpful tone.
-  - If somebody asking for the purpose of the product, you may answer based on your knowledge but only if it is related to the products listed above.
-  - If user asks prices and deals, respond with "For pricing, deals, information, call us at: (02) 8839-0106 and dial local 115, or you can email us at marketing@primegroup.com.ph"
-  - If someone asks personal questions like can it be used in here, there, etc. respond based on your knowledge but only if it is related to the products listed above.
-  - If someone asks for recommendations, you may provide suggestions based on the products listed above.
-  - If the user asks questions not related to PSI, its products, or services, respond with "I'm sorry, I can only answer questions related to Prime Sales Incorporated (PSI) and its products and services."
-  - Don't answer the combination of for further details and for more information and I'm sorry in one response in one response.
-  - If the user asks for a summary of the products, you may provide a brief overview of the products listed above.
-  - If the user asks for a comparison between products, you may provide a comparison based on the features and benefits of the products listed above.
-  - If the user asks for technical specifications, you may provide details based on the descriptions of the products listed above.
-  - Strictly answer the products and services that comes from database only.
-  - Do not include phone numbers or emails in your replies. The system will automatically append the official contact details at the end of your answer.
-  - Do not add for further details and for more information in your answers because i already have that in the ending note.
--  If somebody asks for explanation or more details about products you can answer them based on your knowledge.
--  If somebody asks for products alwayys come with descriptions.
-- Give the partners and brand and its products if it is being asked, don't recommend it partners if somebody asks for a product recommendations or other questions.
-  - Please follow the rules strictly.
-  `;
-
-// Company Info:
-// - Prime Sales Incorporated (PSI), founded in 1976, is a leading supplier of intralogistics solutions in the Philippines, specializing in dry and cold chain applications.
-// - Located in Prime Corporate Center, km. 15 East Service Rd., cor. Marian Rd. 2, Brgy. San Martin De Porres, Parañaque City, Parañaque, Philippines
-// - You was created by the IT personnel of PSI.
-// - Efren S. Pascual Jr. is the current President of Prime Sales, Inc. He is responsible for leading the company’s overall direction, overseeing operations, and ensuring that Prime Sales continues to grow and serve its partners effectively.
-// - Our office hours are from 8:00 AM to 5:00 PM, Monday to Friday.
-// - We are committed to strong after-sales service. This means we don’t just provide products — we provide long-term support. Our dedicated service team ensures that customers receive:
-//   • Technical assistance and troubleshooting
-//   • Preventive maintenance and on-site servicing
-//   • Quick response for spare parts and repairs
-//   • Professional guidance to maximize equipment lifespan and efficiency
-//   • Reliable support that builds long-term partnerships
-//   Many customers choose PSI because of this ongoing support, which gives them peace of mind and ensures smooth operations even after installation.
+- Strictly only provide products from the database. Do not invent or suggest alternatives.
+- If the user asks about products, you may rephrase the descriptions, but do not add or invent any new products.
+- Include product name, description, and partner.
+- Maintain context from chat history.
+- Do not rephrase or generalize product info.
+- If unclear, respond: "For further details, please call us at: (02) 8839-0106, local 115, or email marketing@primegroup.com.ph"
+- For non-PSI questions: "I'm sorry, I can only answer questions related to PSI and its products/services."
+- Do not include phone numbers or emails in your answers; the system appends them automatically.
+- Always keep responses professional, helpful, and strictly about database products.
+- Do not add products that you are not sure when somebody asks. Always look at the database.
+`;
 
 // ---- FETCH RELEVANT PRODUCTS ----
 const fetchRelevantProducts = async (message) => {
   const msg = message.toLowerCase();
 
-  // If user is asking for product lines or categories only
   if (
     msg.includes("categories") ||
     msg.includes("product lines") ||
@@ -86,7 +64,6 @@ const fetchRelevantProducts = async (message) => {
     return { categoriesOnly: true, data: await Category.find({}, "name") };
   }
 
-  // general product queries → return all
   if (
     msg.includes("all products") ||
     msg.includes("your products") ||
@@ -97,7 +74,7 @@ const fetchRelevantProducts = async (message) => {
     return { categoriesOnly: false, data: await Category.find() };
   }
 
-  if (msg.includes("cold chain") || msg.includes("cold storage ")) {
+  if (msg.includes("cold chain") || msg.includes("cold storage")) {
     return {
       categoriesOnly: false,
       data: await Category.find({ name: "Cold Chain Solutions" }),
@@ -109,7 +86,7 @@ const fetchRelevantProducts = async (message) => {
       data: await Category.find({ name: "Docks & Doors" }),
     };
   }
-  if (msg.includes("storage") || msg.includes(" plastic pallet ")) {
+  if (msg.includes("storage") || msg.includes("plastic pallet")) {
     return {
       categoriesOnly: false,
       data: await Category.find({ name: "Industrial Storage Solutions" }),
@@ -118,7 +95,9 @@ const fetchRelevantProducts = async (message) => {
   if (
     msg.includes("racking system") ||
     msg.includes("pallet racking") ||
-    msg.includes("rackings" || msg.includes("racking"))
+    msg.includes("rackings") ||
+    msg.includes("racking") ||
+    msg.includes("racks")
   ) {
     return {
       categoriesOnly: false,
@@ -143,94 +122,39 @@ const fetchRelevantProducts = async (message) => {
     };
   }
 
-  return null; // nothing matched
+  return null;
 };
-const findExactProduct = async (message) => {
-  const msg = message.toLowerCase().trim();
 
-  const product = await Category.aggregate([
-    { $unwind: "$subcategories" },
-    { $unwind: "$subcategories.products" },
-    {
-      $match: {
-        "subcategories.products.name": { $regex: new RegExp(msg, "i") }, // partial match OK
-      },
-    },
-    {
-      $project: {
-        _id: 0,
-        name: "$subcategories.products.name",
-        description: "$subcategories.products.description",
-      },
-    },
-  ]);
+// ---- FUZZY PRODUCT SEARCH ----
+async function fuzzyProductSearch(message) {
+  const query = message.toLowerCase().trim();
 
-  return product;
-};
-export async function searchProducts(query) {
-  // Escape regex special chars
-  const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
-
-  // Search inside products (nested in categories → subcategories → products)
-  const categories = await Category.find({
-    "subcategories.products.name": { $regex: regex },
-  });
-
-  let results = [];
+  const categories = await Category.find();
+  let allProducts = [];
 
   categories.forEach((cat) => {
     cat.subcategories.forEach((sub) => {
       sub.products.forEach((p) => {
-        if (regex.test(p.name) || regex.test(p.description)) {
-          results.push(p);
-        }
+        allProducts.push(p);
       });
     });
   });
 
-  return results;
-}
+  if (allProducts.length === 0) return [];
 
-// // ---- BUILD PROMPT DYNAMICALLY ----
-const buildSystemPrompt = async (message) => {
-  let prompt = baseSystemPrompt;
-  const categoriesResult = await fetchRelevantProducts(message);
+  const productNames = allProducts.map((p) => p.name.toLowerCase());
+  const { bestMatch } = stringSimilarity.findBestMatch(query, productNames);
 
-  // Only include products/services (not categories) in the system prompt
-  if (
-    categoriesResult &&
-    categoriesResult.data.length > 0 &&
-    !categoriesResult.categoriesOnly
-  ) {
-    let productList = "\nProducts, Services and Offers:\n";
-    categoriesResult.data.forEach((cat) => {
-      productList += `* ${cat.name}:\n`;
-      cat.subcategories.forEach((sub) => {
-        productList += `(${sub.name})\n`;
-        sub.products.forEach((p) => {
-          productList += `• ${p.name} – ${p.description}\n`;
-        });
-      });
-      productList += "\n";
-    });
-    prompt += productList;
+  if (bestMatch.rating >= 0.6) {
+    return allProducts.filter((p) =>
+      p.name.toLowerCase().includes(bestMatch.target)
+    );
   }
 
-  return prompt;
-};
-
-// --- Extract keywords from user input ---
-function extractKeywords(message) {
-  return message
-    .toLowerCase()
-    .replace(
-      /\b(do you have|do u have|have you got|please|psi|prime sales|products?|solutions?)\b/gi,
-      ""
-    )
-    .trim();
+  return [];
 }
 
-// ---- OpenAI Client ----
+// ---- OPENAI Client ----
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -239,13 +163,11 @@ function isAvailabilityQuestion(message) {
   return /\b(do you have|do u have|have you got|offer)\b/i.test(message);
 }
 
-// ---- Chat Endpoint ----
-let chatHistory = []; // store all previous messages
+let chatHistory = [];
 
+// ---- FALLBACK to OpenAI ----
 async function fallbackOpenAI(message) {
-  const systemPrompt = await buildSystemPrompt(message);
-
-  // push user message
+  const systemPrompt = baseSystemPrompt;
   chatHistory.push({ role: "user", content: message });
 
   const response = await openai.responses.create({
@@ -254,8 +176,6 @@ async function fallbackOpenAI(message) {
   });
 
   const botReply = response.output[0].content[0].text.trim();
-
-  // push assistant reply
   chatHistory.push({ role: "assistant", content: botReply });
 
   return botReply;
@@ -272,7 +192,7 @@ function buildDBReply(catResult, keyword) {
         keyword || cat.name
       } we have available:\n`;
       sub.products.forEach((p) => {
-        reply += `• ${p.name} – ${p.description}\n\n`; // notice the double \n
+        reply += `• ${p.name} – ${p.description}\n\n`;
       });
     });
   });
@@ -280,57 +200,40 @@ function buildDBReply(catResult, keyword) {
   return reply;
 }
 
-// ---- BUILD REPLY FOR ALL PRODUCTS ----
 async function buildAllProductsReply() {
   const allCategories = await Category.find();
-
   if (!allCategories || allCategories.length === 0) return "";
 
   let reply = "Absolutely! Here are all the products we have available:\n\n";
-
   allCategories.forEach((cat) => {
-    reply += ` For ${cat.name}: \n\n`; // Main category
-
+    reply += ` For ${cat.name}:\n\n`;
     cat.subcategories.forEach((sub) => {
       sub.products.forEach((p) => {
-        reply += `• ${p.name} – ${p.description}\n\n`; // Product
+        reply += `• ${p.name} – ${p.description}\n\n`;
       });
-      reply += "\n";
     });
-
-    reply += "\n"; // Space between main categories
+    reply += "\n";
   });
 
   return reply.trim();
 }
 
+// ---- CHAT ENDPOINT ----
 app.get("/chat", async (req, res) => {
   const message = req.query.message;
   if (!message) return res.status(400).json({ error: "Message is required" });
 
   try {
     let botReply = "";
-
     const msgLower = message.toLowerCase();
 
-    // 1️⃣ All products
     if (
       msgLower.includes("all products") ||
       msgLower.includes("your products")
     ) {
       botReply = await buildAllProductsReply();
-    }
-    // 2️⃣ Availability question
-    else if (isAvailabilityQuestion(message)) {
-      const keyword = extractKeywords(message);
-      let product = [];
-
-      if (keyword) {
-        product = await findExactProduct(keyword);
-        if (product.length === 0) {
-          product = await searchProducts(keyword);
-        }
-      }
+    } else if (isAvailabilityQuestion(message)) {
+      let product = await fuzzyProductSearch(message);
 
       if (product.length > 0) {
         botReply = `Yes, we have the following:\n${product
@@ -339,20 +242,13 @@ app.get("/chat", async (req, res) => {
       } else {
         const catResult = await fetchRelevantProducts(message);
         if (catResult && catResult.data.length > 0) {
-          botReply = buildDBReply(catResult, keyword);
+          botReply = buildDBReply(catResult);
         } else {
           botReply = await fallbackOpenAI(message);
         }
       }
-    }
-    // 3️⃣ Fallback for any other query (like specific product lookup)
-    else {
-      // Try exact product search first
-      let product = await findExactProduct(message);
-      if (product.length === 0) {
-        product = await searchProducts(message);
-      }
-
+    } else {
+      let product = await fuzzyProductSearch(message);
       if (product.length > 0) {
         botReply = `Yes, we have the following:\n${product
           .map((p) => `• ${p.name} – ${p.description}`)
@@ -372,11 +268,8 @@ app.get("/chat", async (req, res) => {
   }
 });
 
-// ---- Default Route ----
-app.get("/hello", (req, res) => {
-  res.send("Hello! The server is running.");
-});
-
+// ---- Default Routes ----
+app.get("/hello", (req, res) => res.send("Hello! The server is running."));
 app.get("/test-cors", (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.json({ msg: "CORS test works!" });
