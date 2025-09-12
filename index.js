@@ -6,6 +6,8 @@ import OpenAI from "openai";
 import stringSimilarity from "string-similarity";
 import Category from "./models/category.js";
 
+import CompanyInfo from "./models/companyInfo.js";
+
 dotenv.config();
 
 const app = express();
@@ -24,21 +26,9 @@ const baseSystemPrompt = `
   Do NOT use bold (**), italics (*), or Markdown formatting. 
   And also list products one each line starting with a bullet point (•).
     
-Company Info:
-- Prime Sales Incorporated (PSI), founded in 1976, is a leading supplier of intralogistics solutions in the Philippines, specializing in dry and cold chain applications.
-- Located in Prime Corporate Center, km. 15 East Service Rd., cor. Marian Rd. 2, Brgy. San Martin De Porres, Parañaque City, Parañaque, Philippines
-- You was created by the IT personnel of PSI.
-- Efren S. Pascual Jr. is the current President of Prime Sales, Inc. He is responsible for leading the company’s overall direction, overseeing operations, and ensuring that Prime Sales continues to grow and serve its partners effectively.
-- Our office hours are from 8:00 AM to 5:00 PM, Monday to Friday.
-- We are committed to strong after-sales service. This means we don’t just provide products — we provide long-term support. Our dedicated service team ensures that customers receive:
-  • Technical assistance and troubleshooting
-  • Preventive maintenance and on-site servicing
-  • Quick response for spare parts and repairs
-  • Professional guidance to maximize equipment lifespan and efficiency
-  • Reliable support that builds long-term partnerships
-  Many customers choose PSI because of this ongoing support, which gives them peace of mind and ensures smooth operations even after installation.
-
   Rules:
+- STRICTLY do not answer other partner or companies product ONLY Prime Sales.
+- Do not say anything like yes, we offer something that are not sure and included to the database.
 - Do not suggest or invent any options not in the database.  
 - Strictly only provide products from the database. Do not invent or suggest alternatives.
 - If the user asks about products, you may rephrase the descriptions, but do not add or invent any new products.
@@ -51,6 +41,57 @@ Company Info:
 - Always keep responses professional, helpful, and strictly about database products.
 - Do not add products that you are not sure when somebody asks. Always look at the database.
 `;
+
+const pickRandom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const fetchRelevantInfo = async (message) => {
+  const msg = message.toLowerCase();
+
+  const getReply = async (key) => {
+    const entry = await CompanyInfo.findOne({ key });
+    if (!entry) return null;
+    return Array.isArray(entry.content)
+      ? pickRandom(entry.content)
+      : entry.content;
+  };
+
+  if (
+    msg.includes("prime sales") ||
+    msg.includes("psi") ||
+    msg.includes("company info") ||
+    msg.includes("about you") ||
+    msg.includes("about prime sales")
+  ) {
+    return await getReply("about");
+  }
+
+  if (
+    msg.includes("location") ||
+    msg.includes("where are you located") ||
+    msg.includes("address") ||
+    msg.includes("office")
+  ) {
+    return await getReply("location");
+  }
+
+  if (
+    msg.includes("president") ||
+    msg.includes("ceo") ||
+    msg.includes("head")
+  ) {
+    return await getReply("president");
+  }
+
+  if (
+    msg.includes("after sales") ||
+    msg.includes("support") ||
+    msg.includes("service")
+  ) {
+    return await getReply("afterSales");
+  }
+
+  return null;
+};
 
 // ---- FETCH RELEVANT PRODUCTS ----
 const fetchRelevantProducts = async (message) => {
@@ -143,15 +184,16 @@ async function fuzzyProductSearch(message) {
   if (allProducts.length === 0) return [];
 
   const productNames = allProducts.map((p) => p.name.toLowerCase());
-  const { bestMatch } = stringSimilarity.findBestMatch(query, productNames);
+  const { ratings } = stringSimilarity.findBestMatch(query, productNames);
 
-  if (bestMatch.rating >= 0.6) {
-    return allProducts.filter((p) =>
-      p.name.toLowerCase().includes(bestMatch.target)
-    );
-  }
+  // return ALL products that are reasonably close
+  const matchedProducts = ratings
+    .filter((r) => r.rating >= 0.5) // threshold
+    .map((r) => r.target);
 
-  return [];
+  return allProducts.filter((p) =>
+    matchedProducts.includes(p.name.toLowerCase())
+  );
 }
 
 // ---- OPENAI Client ----
@@ -174,7 +216,9 @@ async function fallbackOpenAI(message) {
     model: "gpt-4o-mini",
     input: [{ role: "system", content: systemPrompt }, ...chatHistory],
   });
-
+  if (response.usage) {
+    console.log("Token usage:", response.usage);
+  }
   const botReply = response.output[0].content[0].text.trim();
   chatHistory.push({ role: "assistant", content: botReply });
 
@@ -227,22 +271,25 @@ app.get("/chat", async (req, res) => {
     let botReply = "";
     const msgLower = message.toLowerCase();
 
-    if (
+    const companyInfo = await fetchRelevantInfo(message);
+    if (companyInfo) {
+      botReply = companyInfo;
+    } else if (
       msgLower.includes("all products") ||
       msgLower.includes("your products")
     ) {
       botReply = await buildAllProductsReply();
     } else if (isAvailabilityQuestion(message)) {
-      let product = await fuzzyProductSearch(message);
+      const catResult = await fetchRelevantProducts(message);
 
-      if (product.length > 0) {
-        botReply = `Yes, we have the following:\n${product
-          .map((p) => `• ${p.name} – ${p.description}`)
-          .join("\n")}`;
+      if (catResult && catResult.data.length > 0) {
+        botReply = buildDBReply(catResult);
       } else {
-        const catResult = await fetchRelevantProducts(message);
-        if (catResult && catResult.data.length > 0) {
-          botReply = buildDBReply(catResult);
+        let product = await fuzzyProductSearch(message);
+        if (product.length > 0) {
+          botReply = `Yes, we have the following:\n${product
+            .map((p) => `• ${p.name} – ${p.description}`)
+            .join("\n")}`;
         } else {
           botReply = await fallbackOpenAI(message);
         }
@@ -264,7 +311,9 @@ app.get("/chat", async (req, res) => {
     res.json({ reply: botReply });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({
+      error: "We can't process your request. Please try again later.",
+    });
   }
 });
 
