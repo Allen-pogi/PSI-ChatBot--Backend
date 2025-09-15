@@ -56,28 +56,34 @@ const fetchRelevantInfo = async (message) => {
   };
 
   if (
-    msg.includes("prime sales") ||
-    msg.includes("psi") ||
-    msg.includes("company info") ||
-    msg.includes("about you") ||
-    msg.includes("about prime sales")
-  ) {
-    return await getReply("about");
-  }
-
-  if (
     msg.includes("location") ||
+    msg.includes("loc") ||
     msg.includes("where are you located") ||
+    msg.includes("where are u located") ||
     msg.includes("address") ||
-    msg.includes("office")
+    msg.includes("office location") ||
+    msg.includes("psi location") ||
+    msg.includes("where is psi located") ||
+    msg.includes("prime sales location") ||
+    msg.includes("where can I visit you") ||
+    msg.includes("prime sales loc") ||
+    msg.includes("psi loc")
   ) {
     return await getReply("location");
   }
+  if (
+    msg.includes("business hours") ||
+    msg.includes("Operation hours") ||
+    msg.includes("Office hours") ||
+    msg.includes("prime sales hours")
+  ) {
+    return await getReply("hours");
+  }
 
   if (
+    msg.includes("president of psi") ||
     msg.includes("president") ||
-    msg.includes("ceo") ||
-    msg.includes("head")
+    msg.includes("psi president")
   ) {
     return await getReply("president");
   }
@@ -88,6 +94,25 @@ const fetchRelevantInfo = async (message) => {
     msg.includes("service")
   ) {
     return await getReply("afterSales");
+  }
+  if (
+    msg.includes("why choose u") ||
+    msg.includes("why choose you") ||
+    msg.includes("why choose Prime Sales") ||
+    msg.includes("why should I choose you") ||
+    msg.includes("why should I choose PSI")
+  ) {
+    return await getReply("choose");
+  }
+
+  if (
+    msg.includes("prime sales") ||
+    msg.includes("psi") ||
+    msg.includes("company info") ||
+    msg.includes("about you") ||
+    msg.includes("about prime sales")
+  ) {
+    return await getReply("choose");
   }
 
   return null;
@@ -228,16 +253,28 @@ async function fallbackOpenAI(message) {
 function buildDBReply(catResult, keyword) {
   if (!catResult || catResult.data.length === 0) return "";
 
-  let reply = "";
+  let reply = `Absolutely! Here are the ${
+    keyword || "products"
+  } we have available:\n\n`;
 
   catResult.data.forEach((cat) => {
     cat.subcategories.forEach((sub) => {
-      reply += `Absolutely! Here are the ${
-        keyword || cat.name
-      } we have available:\n`;
+      reply += `For ${cat.name} :\n`;
+
       sub.products.forEach((p) => {
-        reply += `• ${p.name} – ${p.description}\n\n`;
+        // pick random description if it's an array
+        let desc;
+        if (Array.isArray(p.descriptions) && p.descriptions.length > 0) {
+          desc =
+            p.descriptions[Math.floor(Math.random() * p.descriptions.length)];
+        } else {
+          desc = p.description; // fallback to single description
+        }
+
+        reply += `• ${p.name} – ${desc}\n\n`;
       });
+
+      reply += "\n";
     });
   });
 
@@ -249,17 +286,26 @@ async function buildAllProductsReply() {
   if (!allCategories || allCategories.length === 0) return "";
 
   let reply = "Absolutely! Here are all the products we have available:\n\n";
-  allCategories.forEach((cat) => {
-    reply += ` For ${cat.name}:\n\n`;
-    cat.subcategories.forEach((sub) => {
-      sub.products.forEach((p) => {
-        reply += `• ${p.name} – ${p.description}\n\n`;
-      });
-    });
-    reply += "\n";
-  });
 
-  return reply.trim();
+  for (const cat of allCategories) {
+    reply += `For ${cat.name}:\n\n`;
+
+    for (const sub of cat.subcategories) {
+      for (const p of sub.products) {
+        if (p.descriptions && p.descriptions.length > 0) {
+          const randomDesc =
+            p.descriptions[Math.floor(Math.random() * p.descriptions.length)];
+          reply += `• ${p.name} – ${randomDesc}\n\n`;
+        } else {
+          reply += `• ${p.name}\n\n`; // fallback if no description
+        }
+      }
+    }
+
+    reply += "\n";
+  }
+
+  return reply;
 }
 
 // ---- CHAT ENDPOINT ----
@@ -288,7 +334,19 @@ app.get("/chat", async (req, res) => {
         let product = await fuzzyProductSearch(message);
         if (product.length > 0) {
           botReply = `Yes, we have the following:\n${product
-            .map((p) => `• ${p.name} – ${p.description}`)
+            .map((p) => {
+              let desc;
+              if (Array.isArray(p.descriptions) && p.descriptions.length > 0) {
+                desc =
+                  p.descriptions[
+                    Math.floor(Math.random() * p.descriptions.length)
+                  ];
+              } else {
+                desc = p.description || "Description not available";
+              }
+              return `• ${p.name} – ${desc}`;
+            })
+
             .join("\n")}`;
         } else {
           botReply = await fallbackOpenAI(message);
@@ -298,7 +356,19 @@ app.get("/chat", async (req, res) => {
       let product = await fuzzyProductSearch(message);
       if (product.length > 0) {
         botReply = `Yes, we have the following:\n${product
-          .map((p) => `• ${p.name} – ${p.description}`)
+          .map((p) => {
+            let desc;
+            if (Array.isArray(p.descriptions) && p.descriptions.length > 0) {
+              desc =
+                p.descriptions[
+                  Math.floor(Math.random() * p.descriptions.length)
+                ];
+            } else {
+              desc = p.description || "Description not available";
+            }
+            return `• ${p.name} – ${desc}`;
+          })
+
           .join("\n")}`;
       } else {
         botReply = await fallbackOpenAI(message);
@@ -306,7 +376,7 @@ app.get("/chat", async (req, res) => {
     }
 
     botReply +=
-      "\n\nFor further details, please call us at: (02) 8839-0106 and dial local 115, or you can email us at marketing@primegroup.com.ph.";
+      "\n\nFor further details, please call us at: (02) 8839-0106 and dial local 115 or you can email us at marketing@primegroup.com.ph.";
 
     res.json({ reply: botReply });
   } catch (err) {
