@@ -63,6 +63,22 @@ const seedCompanyInfo = async () => {
           "PSI offers reliable after-sales services — from equipment servicing to technical assistance.",
         ],
       },
+      {
+        key: "contact",
+        content: [
+          "You may reach Prime Sales Inc. at (02) 8839-0106 and dial local 115 or email us at marketing@primegroup.com.ph. Our team is ready to assist you with inquiries, product information, and service requests.",
+          "For inquiries and support, contact us at marketing@primegroup.com.ph or call our hotline at (02) 8839-0106 and dial local 115. We look forward to assisting you.",
+          "Connect with Prime Sales Inc. through our official channels: Telephone (02) 8839-0106 and dial local 115, Email marketing@primegroup.com.ph, or visit our office in Parañaque City for direct assistance.",
+        ],
+      },
+      {
+        key: "primo",
+        content: [
+          "I’m Primo, your virtual assistant for Prime Sales Incorporated. I'm here to help you explore our products, services, and solutions.",
+          "Hello! I’m Primo, designed to guide you through everything Prime Sales Inc. offers, from products to customer support.",
+          "I’m Primo, ready to provide insights, answer questions, and assist you with all matters related to Prime Sales Inc.",
+        ],
+      },
     ]);
 
     console.log("✅ Company info seeded!");
