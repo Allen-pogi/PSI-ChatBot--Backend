@@ -54,7 +54,9 @@ const fetchRelevantInfo = async (message) => {
       ? pickRandom(entry.content)
       : entry.content;
   };
-
+  if (msg.includes("who are you") || msg.includes("who are u")) {
+    return await getReply("primo");
+  }
   if (
     msg.includes("location") ||
     msg.includes("loc") ||
@@ -87,7 +89,15 @@ const fetchRelevantInfo = async (message) => {
   ) {
     return await getReply("president");
   }
-
+  if (
+    msg.includes("contact support") ||
+    msg.includes("contacts") ||
+    msg.includes("contact") ||
+    msg.includes("where can I call you") ||
+    msg.includes("hotline")
+  ) {
+    return await getReply("contact");
+  }
   if (
     msg.includes("after sales") ||
     msg.includes("support") ||
@@ -112,7 +122,7 @@ const fetchRelevantInfo = async (message) => {
     msg.includes("about you") ||
     msg.includes("about prime sales")
   ) {
-    return await getReply("choose");
+    return await getReply("about");
   }
 
   return null;
@@ -123,19 +133,12 @@ const fetchRelevantProducts = async (message) => {
   const msg = message.toLowerCase();
 
   if (
-    msg.includes("categories") ||
-    msg.includes("product lines") ||
-    msg.includes("product line")
-  ) {
-    return { categoriesOnly: true, data: await Category.find({}, "name") };
-  }
-
-  if (
     msg.includes("all products") ||
     msg.includes("your products") ||
-    msg.includes("list of products") ||
+    msg.includes("products list") ||
     msg.includes("overview of products") ||
-    msg.includes("what do you have")
+    msg.includes("what do you have") ||
+    msg.includes("product catalog")
   ) {
     return { categoriesOnly: false, data: await Category.find() };
   }
@@ -316,13 +319,31 @@ app.get("/chat", async (req, res) => {
   try {
     let botReply = "";
     const msgLower = message.toLowerCase();
+    let isContactInquiry = false; // track if it's contact-related
 
     const companyInfo = await fetchRelevantInfo(message);
     if (companyInfo) {
       botReply = companyInfo;
+
+      // Check if the info came from "contact"
+      if (
+        msgLower.includes("contact") ||
+        msgLower.includes("contacts") ||
+        msgLower.includes("hotline") ||
+        msgLower.includes("where can i call you") ||
+        msgLower.includes("contact support")
+      ) {
+        isContactInquiry = true;
+      }
     } else if (
       msgLower.includes("all products") ||
-      msgLower.includes("your products")
+      msgLower.includes("your products") ||
+      msgLower.includes("all products") ||
+      msgLower.includes("your products") ||
+      msgLower.includes("products list") ||
+      msgLower.includes("overview of products") ||
+      msgLower.includes("what do you have") ||
+      msgLower.includes("product catalog")
     ) {
       botReply = await buildAllProductsReply();
     } else if (isAvailabilityQuestion(message)) {
@@ -346,7 +367,6 @@ app.get("/chat", async (req, res) => {
               }
               return `• ${p.name} – ${desc}`;
             })
-
             .join("\n")}`;
         } else {
           botReply = await fallbackOpenAI(message);
@@ -368,15 +388,17 @@ app.get("/chat", async (req, res) => {
             }
             return `• ${p.name} – ${desc}`;
           })
-
           .join("\n")}`;
       } else {
         botReply = await fallbackOpenAI(message);
       }
     }
 
-    botReply +=
-      "\n\nFor further details, please call us at: (02) 8839-0106 and dial local 115 or you can email us at marketing@primegroup.com.ph.";
+    // Only append contact line if it's NOT a contact inquiry
+    if (!isContactInquiry) {
+      botReply +=
+        "\n\nFor further details, please call us at: (02) 8839-0106 and dial local 115 or you can email us at marketing@primegroup.com.ph.";
+    }
 
     res.json({ reply: botReply });
   } catch (err) {
