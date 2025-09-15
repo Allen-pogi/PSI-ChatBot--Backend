@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
   name: String,
-  description: String,
+  descriptions: [String], // now an array
 });
 
 const subcategorySchema = new mongoose.Schema({
