@@ -12,17 +12,38 @@ const categories = [
         products: [
           {
             name: "Structural Insulated Panel",
-            description: "Energy-saving panels for cold rooms and warehouses.",
+            descriptions: [
+              "Energy-saving panels for cold rooms and warehouses.",
+              "Durable insulated panels designed for temperature control.",
+              "Panels that ensure efficiency and reliability in cold storage.",
+              "High-performance panels that provide excellent thermal insulation.",
+              "Lightweight yet strong panels built for long-term durability.",
+              "Versatile panels ideal for warehouses, cold rooms, and clean environments.",
+              "Cost-efficient insulated panels engineered for consistent temperature retention.",
+            ],
           },
           {
             name: "Insulated Doors",
-            description:
+            descriptions: [
               "Tightly sealed doors that maintain cold temperatures.",
+              "High-performance insulated doors for secure cold rooms.",
+              "Doors built to prevent temperature loss in storage areas.",
+              "Durable doors engineered to provide reliable thermal insulation.",
+              "Energy-efficient doors designed to minimize cooling costs.",
+              "Specialized insulated doors that ensure product freshness and safety.",
+              "Heavy-duty cold room doors that combine strength with insulation.",
+            ],
           },
           {
             name: "Panel and Door Accessories",
-            description:
+            descriptions: [
               "Fittings and add-ons to complete cold storage systems.",
+              "Reliable accessories that enhance the durability and efficiency of panels and doors.",
+              "Essential parts designed to ensure smooth installation and long-lasting performance.",
+              "Customizable components that improve sealing, insulation, and functionality.",
+              "High-quality accessories engineered for cold room and warehouse applications.",
+              "Complementary fittings that make panels and doors more secure and efficient.",
+            ],
           },
         ],
       },
@@ -36,26 +57,53 @@ const categories = [
         products: [
           {
             name: "Dock Levellers",
-            description:
+            descriptions: [
               "Bridges the gap between trucks and docks for safe loading.",
+              "Strong and durable dock levellers designed for heavy-duty use.",
+              "Ensures smooth and efficient cargo transfer between dock and vehicle.",
+              "Reliable levelling systems that improve workflow efficiency.",
+              "Engineered for safety and long service life in busy facilities.",
+            ],
           },
           {
             name: "Loading Houses",
-            description: "Enclosed dock systems that protect goods and staff.",
+            descriptions: [
+              "Enclosed dock systems that protect goods and staff.",
+              "All-in-one loading house solutions for weather protection.",
+              "Improves safety and hygiene in loading and unloading areas.",
+              "Durable structures designed to withstand heavy industrial use.",
+              "Efficient solutions that maintain product quality during transfer.",
+            ],
           },
           {
             name: "Dock Seals or Shelters",
-            description:
+            descriptions: [
               "Seal the space around trucks to keep dust, pests, and weather out.",
+              "Durable dock shelters that improve insulation and reduce energy loss.",
+              "Flexible sealing systems that adapt to different truck sizes.",
+              "Energy-saving seals that reduce cooling and heating costs.",
+              "Protects products, staff, and equipment during loading operations.",
+            ],
           },
           {
             name: "Control Systems",
-            description:
+            descriptions: [
               "Smart controls for safe and efficient dock operations.",
+              "Integrated dock automation systems for reliability.",
+              "User-friendly controls for loading dock equipment.",
+              "Advanced safety features to minimize accidents.",
+              "Systems built to streamline loading processes.",
+            ],
           },
           {
             name: "Dock & Safety Accessories",
-            description: "Extra tools to improve safety at the loading dock.",
+            descriptions: [
+              "Extra tools to improve safety at the loading dock.",
+              "Durable safety accessories designed to prevent accidents.",
+              "Reliable add-ons that enhance dock performance.",
+              "Essential accessories to improve efficiency in loading areas.",
+              "Quality components built to last in demanding conditions.",
+            ],
           },
         ],
       },
@@ -64,29 +112,63 @@ const categories = [
         products: [
           {
             name: "Industrial Sectional Doors",
-            description: "Insulated doors for warehouses and factories.",
+            descriptions: [
+              "Insulated doors for warehouses and factories.",
+              "Durable sectional doors designed for long-lasting use.",
+              "Energy-efficient doors that help maintain temperature control.",
+              "Reliable doors built to handle frequent operations.",
+              "Customizable designs to fit diverse industrial applications.",
+            ],
           },
           {
             name: "High-Speed Sectional Doors",
-            description: "Fast-opening doors to save energy and time.",
+            descriptions: [
+              "Fast-opening doors to save energy and time.",
+              "High-speed doors designed for intensive industrial use.",
+              "Quick-action doors that improve workflow efficiency.",
+              "Durable mechanisms for reliable high-cycle performance.",
+              "Engineered to reduce downtime and improve productivity.",
+            ],
           },
           {
             name: "Industrial Rolling Shutters",
-            description: "Strong shutters for security and easy access.",
+            descriptions: [
+              "Strong shutters for security and easy access.",
+              "Durable rolling shutters designed for industrial use.",
+              "Space-saving shutter doors for warehouses and factories.",
+              "Reliable shutters built for long service life.",
+              "Customizable options for security and efficiency.",
+            ],
           },
           {
             name: "Industrial Rolling Grilles",
-            description: "Ventilated grilles for protection with airflow.",
+            descriptions: [
+              "Ventilated grilles for protection with airflow.",
+              "Durable grilles for secure yet open visibility.",
+              "Strong rolling grilles designed for industrial facilities.",
+              "Easy-to-operate designs for everyday use.",
+              "Customizable finishes for both function and design.",
+            ],
           },
           {
             name: "Strip Curtains",
-            description:
+            descriptions: [
               "Flexible plastic strips that keep temperature and dust under control.",
+              "Durable strip curtains designed for long-term use.",
+              "Energy-saving curtains for cold rooms and warehouses.",
+              "Easy-to-install curtains that separate different zones.",
+              "Transparent strips that maintain visibility and safety.",
+            ],
           },
           {
             name: "ISO Doors",
-            description:
+            descriptions: [
               "Specialized doors for cleanrooms and controlled environments.",
+              "Durable ISO-certified doors designed for hygiene-critical areas.",
+              "Reliable doors that maintain air quality and cleanliness.",
+              "High-quality finishes suitable for sterile environments.",
+              "Energy-efficient and compliant with strict standards.",
+            ],
           },
         ],
       },
@@ -100,43 +182,83 @@ const categories = [
         products: [
           {
             name: "Wide Aisle",
-            description:
-              "CR18 Wide Aisle Pallet Racking provides unrestricted access to all pallets, making it versatile for single- or double-depth racks. It adapts to various warehouse layouts, pallet types (Euro, Chep, disposable, captive, mesh boxes, bins), and can be customized with different beams, supports, shelves, and accessories.",
+            descriptions: [
+              "Versatile pallet racking with unrestricted access to goods.",
+              "Compatible with a wide range of pallet types and sizes.",
+              "Customizable beams and shelves for flexible storage.",
+              "Strong and durable structure for heavy-duty loads.",
+              "Efficient system ideal for warehouses of all sizes.",
+            ],
           },
           {
             name: "Narrow Aisle",
-            description:
-              "Narrow Aisle Pallet Racking is a space-saving system that maximizes storage capacity in limited floor space. It ensures fast pallet access and efficient order picking using specialized stackers (man-down, man-up, or high-lift). The system offers flexible heights and depths, with adjustable beams, and often works with guided handling equipment (wire or rail) for smooth operations.",
+            descriptions: [
+              "Space-saving racking that maximizes storage capacity.",
+              "Ensures fast pallet access in limited floor space.",
+              "Ideal for specialized forklifts in tight aisles.",
+              "Flexible beam adjustment for different pallet sizes.",
+              "Efficient system for high-density warehouses.",
+            ],
           },
           {
             name: "Mobile Pallet Racking",
-            description:
-              "Mobile Racking (MOVO) is a high-density storage system that can double capacity compared to conventional racks. It uses electronically controlled bases running on in-ground rails, supporting bay loads up to 24 tons and heights up to 12m. Equipped with sensors and control options, MOVO ensures safe, flexible, and efficient pallet storage for all types of goods.",
+            descriptions: [
+              "High-density storage system that doubles warehouse capacity.",
+              "Electronically controlled bases for flexible operation.",
+              "Safe and efficient pallet handling with sensors.",
+              "Durable design supporting loads up to 24 tons.",
+              "Maximizes floor space while ensuring accessibility.",
+            ],
           },
           {
             name: "Pallet Shuttle System",
-            description:
-              "The Pallet Shuttle system is a semi-automated, high-density storage solution that removes the need for forklifts to enter the racks. Operated by remote control, it enables fast pallet handling in channels similar to drive-in or pallet-flow setups. The system supports FIFO or LIFO operations, making it ideal for storing fewer product lines in large quantities.",
+            descriptions: [
+              "Semi-automated system that speeds up pallet handling.",
+              "Removes the need for forklifts to enter racks.",
+              "Supports both FIFO and LIFO operations.",
+              "Ideal for storing fewer product lines in bulk.",
+              "Efficient solution for high-volume storage facilities.",
+            ],
           },
           {
             name: "Drive-in Racking",
-            description:
-              "Drive-in Pallet Racking is a high-density storage system that can save up to 90% of floor space compared to conventional pallet storage. Pallets are stored on front-to-back rails, allowing safe stacking and efficient handling, especially for fragile or unstable goods. It follows the Last-in, First-out (LIFO) principle, giving access to pallets one-by-one from the rack front.",
+            descriptions: [
+              "High-density storage system that saves up to 90% of space.",
+              "Ideal for storing fragile or unstable goods.",
+              "Operates on Last-in, First-out (LIFO) principle.",
+              "Durable rails for safe pallet stacking.",
+              "Efficient solution for large volume storage needs.",
+            ],
           },
           {
             name: "Pallet Flow",
-            description:
-              "Pallet Flow Racking (Pallet Live Storage) is a FIFO storage system that can save up to 60% of space compared to conventional racking. It uses integrated roller conveyors to move pallets smoothly and safely with automatic braking and load guides. Ideal for high-volume industries like beverages or as buffer storage in manufacturing.",
+            descriptions: [
+              "FIFO storage system with integrated roller conveyors.",
+              "Reduces space requirements by up to 60%.",
+              "Automatic braking ensures safe pallet flow.",
+              "Efficient storage for beverages and high-volume goods.",
+              "Reliable system for manufacturing and distribution centers.",
+            ],
           },
           {
             name: "Multi-Tier",
-            description:
-              "Multi-tier Pallet Racking creates multiple storage levels with built-in walkways for manual picking. It maximizes space better than traditional mezzanine flooring and is ideal for cartons, boxes, or garments on hangers. Multi-tier structures can be built directly from the floor or on top of a mezzanine, enabling both storage and multi-functional areas below.",
+            descriptions: [
+              "Creates multiple storage levels with built-in walkways.",
+              "Maximizes vertical space better than mezzanine floors.",
+              "Ideal for cartons, boxes, or garments on hangers.",
+              "Durable structure for manual picking operations.",
+              "Flexible design to create both storage and work areas.",
+            ],
           },
           {
-            name: "Push-back  ",
-            description:
-              "Push-back Rollers are a LIFO pallet racking system based on CR18 racks with integrated wheel or roller conveyors. Pallets roll forward automatically at controlled speed when the front one is removed, allowing storage of up to 9 pallets deep. They are also useful for adding storage above cross-aisles or around dock-levellers.",
+            name: "Push-back",
+            descriptions: [
+              "LIFO pallet racking with integrated wheel conveyors.",
+              "Pallets roll forward automatically for easy access.",
+              "Stores up to 9 pallets deep for space efficiency.",
+              "Durable rollers ensure smooth pallet movement.",
+              "Ideal for use above cross-aisles or dock areas.",
+            ],
           },
         ],
       },
@@ -145,29 +267,63 @@ const categories = [
         products: [
           {
             name: "Eco Pallets",
-            description: "Cost-effective pallets for general use.",
+            descriptions: [
+              "Cost-effective pallets for general use.",
+              "Lightweight yet strong design for everyday handling.",
+              "Durable and reusable pallets for multiple trips.",
+              "Easy-to-clean surfaces for convenience.",
+              "Efficient solution for cost-sensitive operations.",
+            ],
           },
           {
             name: "Warehouse Pallets",
-            description: "Durable pallets for everyday warehouse operations.",
+            descriptions: [
+              "Durable pallets for everyday warehouse operations.",
+              "Strong design built for long-term reliability.",
+              "Easy to handle with forklifts and pallet jacks.",
+              "Resistant to wear and tear in busy facilities.",
+              "Ideal for logistics and distribution centers.",
+            ],
           },
           {
             name: "Hygiene Pallets",
-            description:
+            descriptions: [
               "Easy-to-clean pallets for food and pharmaceutical use.",
+              "Non-porous surfaces to prevent contamination.",
+              "Durable design suitable for hygienic industries.",
+              "Compliant with strict food safety standards.",
+              "Long-lasting solution for sterile environments.",
+            ],
           },
           {
             name: "Automatic Storage Pallets",
-            description:
-              "Designed for automated storage and retrieval systems (ASRS).",
+            descriptions: [
+              "Designed for automated storage and retrieval systems.",
+              "Strong and precise design for ASRS compatibility.",
+              "Lightweight structure for smooth system handling.",
+              "Reliable pallets built for automation efficiency.",
+              "Durable and consistent in repetitive operations.",
+            ],
           },
           {
             name: "Metal Reinforced Pallets",
-            description: "Heavy-duty pallets for extra strength.",
+            descriptions: [
+              "Heavy-duty pallets with added strength from metal reinforcement.",
+              "Durable solution for demanding industrial loads.",
+              "Long-lasting pallets designed for extra safety.",
+              "Reliable design for transporting heavy goods.",
+              "Ideal for warehouses requiring maximum durability.",
+            ],
           },
           {
             name: "Spill Containment Pallets",
-            description: "Pallets designed to catch leaks and spills.",
+            descriptions: [
+              "Pallets designed to catch leaks and spills.",
+              "Durable containment system for liquid goods.",
+              "Ensures safety and compliance in storage areas.",
+              "Easy to clean and maintain for long-term use.",
+              "Protects facilities from chemical spills and hazards.",
+            ],
           },
         ],
       },
@@ -181,29 +337,63 @@ const categories = [
         products: [
           {
             name: "ICE Counterbalance Trucks",
-            description: "Fuel-powered forklifts for heavy loads.",
+            descriptions: [
+              "Fuel-powered forklifts for heavy loads.",
+              "Reliable counterbalance trucks for demanding tasks.",
+              "Durable design for long-term industrial use.",
+              "Efficient trucks that deliver consistent performance.",
+              "Strong lifting capacity for diverse applications.",
+            ],
           },
           {
             name: "Electric Counterbalance Trucks",
-            description: "Eco-friendly forklifts powered by electricity.",
+            descriptions: [
+              "Eco-friendly forklifts powered by electricity.",
+              "Efficient trucks that reduce carbon footprint.",
+              "Durable and reliable design for warehouses.",
+              "Smooth and quiet operation for indoor use.",
+              "Cost-saving alternative to fuel-powered trucks.",
+            ],
           },
           {
             name: "Pallet Trucks",
-            description: "Simple hand or powered trucks for moving pallets.",
+            descriptions: [
+              "Simple hand or powered trucks for moving pallets.",
+              "Lightweight and easy to maneuver in warehouses.",
+              "Durable design for everyday logistics operations.",
+              "Reliable solution for short-distance pallet transport.",
+              "Compact design for narrow aisles and spaces.",
+            ],
           },
           {
             name: "Reach Trucks",
-            description: "Forklifts designed for tall and narrow aisles.",
+            descriptions: [
+              "Forklifts designed for tall and narrow aisles.",
+              "Durable design for efficient high-rack storage.",
+              "Smooth operation in limited floor space.",
+              "Reliable system for fast and safe pallet retrieval.",
+              "Flexible handling in high-density warehouses.",
+            ],
           },
           {
             name: "Order Pickers",
-            description:
-              "Lifts that help staff pick items from high or elevated racks.",
+            descriptions: [
+              "Lifts that help staff pick items from high racks.",
+              "Efficient machines for warehouse order fulfillment.",
+              "Durable design for frequent picking operations.",
+              "Safe and stable platforms for staff use.",
+              "Flexible design to suit various warehouse needs.",
+            ],
           },
           {
             name: "VNA Trucks",
-            description:
+            descriptions: [
               "Very narrow aisle trucks for high-density warehouses.",
+              "Efficient machines designed for tight spaces.",
+              "Durable forklifts for vertical storage operations.",
+              "Reliable performance in restricted aisle layouts.",
+              "Improves warehouse capacity and picking efficiency.",
+            ],
           },
         ],
       },
@@ -217,17 +407,33 @@ const categories = [
         products: [
           {
             name: "Traction Batteries",
-            description:
-              "Reliable batteries for forklifts and material handling machines.",
+            descriptions: [
+              "Reliable batteries for forklifts and handling equipment.",
+              "Durable batteries designed for heavy industrial use.",
+              "Efficient energy supply for long working hours.",
+              "Safe and reliable performance in demanding conditions.",
+              "Long-lasting batteries for cost-effective operations.",
+            ],
           },
           {
             name: "Pro Series Traction Battery Chargers",
-            description: "Efficient chargers for everyday use.",
+            descriptions: [
+              "Efficient chargers for everyday industrial use.",
+              "Durable chargers built for consistent performance.",
+              "Easy-to-use design with reliable charging capacity.",
+              "Energy-efficient solution for cost savings.",
+              "Safe and long-lasting charging equipment.",
+            ],
           },
           {
             name: "Advance Series Traction Battery Chargers",
-            description:
-              "Advanced chargers with faster charging and longer battery life.",
+            descriptions: [
+              "Advanced chargers with faster charging cycles.",
+              "Durable equipment designed for long-term reliability.",
+              "Energy-efficient design that extends battery life.",
+              "Reliable charging system for industrial batteries.",
+              "Smart features for safe and optimized charging.",
+            ],
           },
         ],
       },
