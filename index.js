@@ -235,7 +235,7 @@ const openai = new OpenAI({
 });
 
 function isAvailabilityQuestion(message) {
-  return /\b(do you have|do u have|have you got|offer | )\b/i.test(message);
+  return /\b(do you have|do u have|have you got|offer||)\b/i.test(message);
 }
 
 let chatHistory = [];
