@@ -406,7 +406,7 @@ const categories = [
         name: "Main",
         products: [
           {
-            name: "Traction Batteries",
+            name: "Traction Battery",
             descriptions: [
               "Reliable batteries for forklifts and handling equipment.",
               "Durable batteries designed for heavy industrial use.",
