@@ -184,7 +184,12 @@ const fetchRelevantProducts = async (message) => {
       data: await Category.find({ name: "Material Handling Equipment" }),
     };
   }
-  if (msg.includes("battery") || msg.includes("charger")) {
+  if (
+    msg.includes("battery") ||
+    msg.includes("charger") ||
+    msg.includes("batteries") ||
+    msg.includes("chargers")
+  ) {
     return {
       categoriesOnly: false,
       data: await Category.find({ name: "Industrial Batteries & Chargers" }),
