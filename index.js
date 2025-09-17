@@ -83,6 +83,35 @@ const fetchRelevantInfo = async (message) => {
   }
 
   if (
+    msg.includes("main branch map") ||
+    msg.includes("main map") ||
+    msg.includes("main branch google map") ||
+    msg.includes("show map") ||
+    msg.includes("show maps") ||
+    msg.includes("PSI map") ||
+    msg.includes("Prime Sales map") ||
+    msg.includes("Prime Sales maps") ||
+    msg.includes("Prime Sales direction") ||
+    msg.includes("Prime Sales directions") ||
+    msg.includes("PSI direction") ||
+    msg.includes("PSI directions") ||
+    msg.includes("location map") ||
+    msg.includes("branch map")
+  ) {
+    return await getReply("map-head-office");
+  }
+  if (
+    msg.includes("cebu office map") ||
+    msg.includes("cebu office direction") ||
+    msg.includes("cebu-direction") ||
+    msg.includes("cebu direction") ||
+    msg.includes("cebu maps") ||
+    msg.includes("cebu ")
+  ) {
+    return await getReply("map-cebu");
+  }
+
+  if (
     msg.includes("president of psi") ||
     msg.includes("president") ||
     msg.includes("psi president")
