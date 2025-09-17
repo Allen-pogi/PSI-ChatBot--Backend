@@ -256,7 +256,7 @@ async function fuzzyProductSearch(message) {
 
   // return ALL products that are reasonably close
   const matchedProducts = ratings
-    .filter((r) => r.rating >= 0.5) // threshold
+    .filter((r) => r.rating >= 0.3) // threshold
     .map((r) => r.target);
 
   return allProducts.filter((p) =>
@@ -274,6 +274,45 @@ function isAvailabilityQuestion(message) {
 }
 
 let chatHistory = [];
+
+async function matchProductsByWords(message) {
+  const queryWords = message.toLowerCase().split(/\s+/).filter(Boolean);
+  const queryPhrase = message.toLowerCase().trim();
+
+  const categories = await Category.find();
+  let allProducts = [];
+
+  categories.forEach((cat) => {
+    cat.subcategories.forEach((sub) => {
+      sub.products.forEach((p) => allProducts.push(p));
+    });
+  });
+
+  if (allProducts.length === 0) return [];
+
+  return allProducts.filter((p) => {
+    const productWords = p.name.toLowerCase().split(/\s+/);
+
+    // Full phrase match first
+    if (p.name.toLowerCase().includes(queryPhrase)) return true;
+
+    // Count how many words match as whole words
+    const matchedWords = queryWords.filter((word) =>
+      productWords.includes(word)
+    );
+
+    console.log(
+      `Product: ${p.name}, Words: ${productWords}, Matched: ${matchedWords}`
+    );
+
+    // Flexible rule:
+    // - If product has 2 or fewer words, allow 1 match
+    // - If product has >2 words, require 2+ matches
+    const requiredMatches = productWords.length <= 2 ? 1 : 2;
+
+    return matchedWords.length >= requiredMatches;
+  });
+}
 
 // ---- FALLBACK to OpenAI ----
 async function fallbackOpenAI(message) {
@@ -302,7 +341,7 @@ function buildDBReply(catResult, keyword) {
 
   catResult.data.forEach((cat) => {
     cat.subcategories.forEach((sub) => {
-      reply += `For ${cat.name} :\n`;
+      reply += `For ${cat.name} :\n\n`;
 
       sub.products.forEach((p) => {
         // pick random description if it's an array
@@ -331,6 +370,8 @@ async function buildAllProductsReply() {
   let reply = "Absolutely! Here are all the products we have available:\n\n";
 
   for (const cat of allCategories) {
+    // Extra visible line before the category
+    reply += "\n\u200B\n"; // zero-width space ensures line is rendered
     reply += `For ${cat.name}:\n\n`;
 
     for (const sub of cat.subcategories) {
@@ -338,14 +379,14 @@ async function buildAllProductsReply() {
         if (p.descriptions && p.descriptions.length > 0) {
           const randomDesc =
             p.descriptions[Math.floor(Math.random() * p.descriptions.length)];
-          reply += `• ${p.name} – ${randomDesc}\n\n`;
+          reply += `• ${p.name} – ${randomDesc}\n`;
         } else {
-          reply += `• ${p.name}\n\n`; // fallback if no description
+          reply += `• ${p.name}\n`;
         }
       }
     }
 
-    reply += "\n";
+    reply += "\n"; // single newline after each category
   }
 
   return reply;
@@ -392,7 +433,7 @@ app.get("/chat", async (req, res) => {
       if (catResult && catResult.data.length > 0) {
         botReply = buildDBReply(catResult);
       } else {
-        let product = await fuzzyProductSearch(message);
+        let product = await matchProductsByWords(message);
         if (product.length > 0) {
           botReply = `Yes, we have the following:\n${product
             .map((p) => {
@@ -413,7 +454,7 @@ app.get("/chat", async (req, res) => {
         }
       }
     } else {
-      let product = await fuzzyProductSearch(message);
+      let product = await matchProductsByWords(message);
       if (product.length > 0) {
         botReply = `Yes, we have the following:\n${product
           .map((p) => {
