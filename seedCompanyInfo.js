@@ -23,6 +23,15 @@ const seedCompanyInfo = async () => {
         ],
       },
       {
+        key: "map-head-office",
+        content: ["Here’s our head office location:", "<MAP>head-office</MAP>"],
+      },
+      {
+        key: "map-cebu",
+        content: ["Here’s our Cebu branch location:", "<MAP>cebu-branch</MAP>"],
+      },
+
+      {
         key: "choose",
         content: [
           "Prime Sales Incorporated (PSI) is a trusted pioneer in the Philippine intralogistics industry. For nearly five decades, we have continuously provided innovative solutions for both dry and cold chain applications. From advanced warehouse systems to dependable material-handling equipment, PSI remains committed to helping businesses achieve operational excellence with strong after-sales support and long-term service partnerships.",
@@ -30,6 +39,7 @@ const seedCompanyInfo = async () => {
           "With over 45 years of expertise, Prime Sales Incorporated (PSI) continues to lead the market in providing complete intralogistics solutions. We offer a wide array of products including warehouse racking, docking systems, cold storage facilities, forklifts, and batteries. What sets us apart is our commitment to ongoing customer support—we back every project with dependable after-sales service, preventive maintenance, and technical guidance that guarantee lasting value for our partners.",
         ],
       },
+
       {
         key: "hours",
         content: [
@@ -41,10 +51,11 @@ const seedCompanyInfo = async () => {
       {
         key: "location",
         content: [
-          "Prime Corporate Center, km. 15 East Service Rd., corner Marian Rd. 2, Brgy. San Martin De Porres, Parañaque City, Philippines",
-          "Prime Sales is located at Prime Corporate Center, km. 15 East Service Rd., corner Marian Rd 2 Brgy. San Martin De Porres, Parañaque City, Philippines",
-          "Visit us at Km. 15 East Service Road, corner Marian Road 2, Brgy. San Martin De Porres, Parañaque City, Philippines – Prime Corporate Center.",
-          "Prime Sales operates at Km. 15 East Service Road, Marian Road 2 corner, Brgy. San Martin De Porres, Parañaque City, Philippines.",
+          "Prime Corporate Center, km. 15 East Service Rd., corner Marian Rd. 2, Brgy. San Martin De Porres Parañaque City, Philippines. We also have a branch at 251B, Copenhagen Residences, A.C. Cortes Ave., Alang-Alang, Mandaue City, Cebu.",
+          "Prime Sales is located at Prime Corporate Center, km. 15 East Service Rd., corner Marian Rd 2 Brgy. San Martin De Porres Parañaque City, Philippines, with a second branch at 251B, Copenhagen Residences, A.C. Cortes Ave., Alang-Alang, Mandaue City, Cebu.",
+          "Visit us at Km. 15 East Service Road, corner Marian Road 2, Brgy. San Martin De Porres Parañaque City, Philippines – Prime Corporate Center. We also operate a branch at 251B, Copenhagen Residences, A.C. Cortes Ave., Alang-Alang, Mandaue City, Cebu.",
+          "Prime Sales operates at Km. 15 East Service Road, Marian Road 2 corner, Brgy. San Martin De Porres Parañaque City, Philippines, and we also have a branch located at 251B, Copenhagen Residences, A.C. Cortes Ave., Alang-Alang, Mandaue City, Cebu.",
+          "Our offices are in Parañaque City (Prime Corporate Center) and in Cebu (251B Copenhagen Residences, A.C. Cortes Ave., Mandaue City).",
         ],
       },
       {
