@@ -24,11 +24,11 @@ const seedCompanyInfo = async () => {
       },
       {
         key: "map-head-office",
-        content: ["Here’s our head office location:", "<MAP>head-office</MAP>"],
+        content: ["<MAP>head-office</MAP>"],
       },
       {
         key: "map-cebu",
-        content: ["Here’s our Cebu branch location:", "<MAP>cebu-branch</MAP>"],
+        content: ["<MAP>cebu-branch</MAP>"],
       },
 
       {
