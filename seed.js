@@ -386,7 +386,7 @@ const categories = [
             ],
           },
           {
-            name: "VNA Trucks",
+            name: "Very Narrow Aisle (VNA) Trucks",
             descriptions: [
               "Very narrow aisle trucks for high-density warehouses.",
               "Efficient machines designed for tight spaces.",
