@@ -106,7 +106,8 @@ const fetchRelevantInfo = async (message) => {
     msg.includes("cebu-direction") ||
     msg.includes("cebu direction") ||
     msg.includes("cebu maps") ||
-    msg.includes("cebu map")
+    msg.includes("cebu map") ||
+    msg.includes("cebu branch map")
   ) {
     return await getReply("map-cebu");
   }
