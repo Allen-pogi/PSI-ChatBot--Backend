@@ -88,13 +88,13 @@ const fetchRelevantInfo = async (message) => {
     msg.includes("main branch google map") ||
     msg.includes("show map") ||
     msg.includes("show maps") ||
-    msg.includes("PSI map") ||
-    msg.includes("Prime Sales map") ||
-    msg.includes("Prime Sales maps") ||
-    msg.includes("Prime Sales direction") ||
-    msg.includes("Prime Sales directions") ||
-    msg.includes("PSI direction") ||
-    msg.includes("PSI directions") ||
+    msg.includes("psi map") ||
+    msg.includes("prime sales map") ||
+    msg.includes("prime sales maps") ||
+    msg.includes("prime sales direction") ||
+    msg.includes("prime sales directions") ||
+    msg.includes("psi direction") ||
+    msg.includes("psi directions") ||
     msg.includes("location map") ||
     msg.includes("branch map")
   ) {
@@ -106,7 +106,7 @@ const fetchRelevantInfo = async (message) => {
     msg.includes("cebu-direction") ||
     msg.includes("cebu direction") ||
     msg.includes("cebu maps") ||
-    msg.includes("cebu ")
+    msg.includes("cebu map")
   ) {
     return await getReply("map-cebu");
   }
@@ -145,8 +145,14 @@ const fetchRelevantInfo = async (message) => {
   }
 
   if (
-    msg.includes("prime sales") ||
-    msg.includes("psi") ||
+    (msg.includes("prime sales") &&
+      !msg.includes("map") &&
+      !msg.includes("direction") &&
+      !msg.includes("location")) ||
+    (msg.includes("psi") &&
+      !msg.includes("map") &&
+      !msg.includes("direction") &&
+      !msg.includes("location")) ||
     msg.includes("company info") ||
     msg.includes("about you") ||
     msg.includes("about prime sales")
