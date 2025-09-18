@@ -124,7 +124,10 @@ const fetchRelevantInfo = async (message) => {
     msg.includes("contacts") ||
     msg.includes("contact") ||
     msg.includes("where can I call you") ||
-    msg.includes("hotline")
+    msg.includes("how can i connect with you") ||
+    msg.includes("hotline") ||
+    msg.includes("how  can i contact you") ||
+    msg.includes("telephone")
   ) {
     return await getReply("contact");
   }
