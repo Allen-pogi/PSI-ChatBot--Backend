@@ -44,7 +44,7 @@ const seedCompanyInfo = async () => {
         key: "hours",
         content: [
           "Prime Sales, Inc. operates during regular business hours, which are from 8:00 AM until 5:00 PM, ensuring that our team is available to assist clients and partners throughout the day.",
-          "The official office hours of Prime Sales, Inc. are from 8:00 AM to 5:00 PM, allowing us to deliver efficient service, respond to inquiries, and maintain smooth business operations",
+          "The official office hours of Prime Sales, Inc. are from 8:00 AM to 5:00 PM, allowing us to deliver efficient service, respond to inquiries, and maintain smooth business operations.",
           "Prime Sales, Inc. is open from 8:00 AM to 5:00 PM, during which our dedicated team is ready to provide assistance, handle transactions, and support the needs of our clients and partners.",
         ],
       },
